@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>회원가입</h1>
+    <form method="post" id="registerForm">
+        <label for="username">이름:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">회원가입</button>
+    </form>
+    <p>이미 계정이 있으신가요? <a href="{{ url_for('login') }}">로그인</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <script>
+        window.onload = function() {
+            let username = '';
+            let password = '';
+            {% for category, message in messages %}
+            if ("{{ category }}" == "success") {
+                {% for message in messages %}
+                {% if loop.index == 2 %}
+                username = "{{ message }}";
+                {% elif loop.index == 3 %}
+                password = "{{ message }}";
+                {% endif %}
+                {% endfor %}
+                alert('=========================\n회원가입을 축하합니다\n1회용이지만 잘 기억하는 척이라도 하세요\n귀중한 정보는 어디있는지 모릅니다.\n\nid: "' + username + '"\npw: "' + password + '"\n=========================');
+                window.location.href = "{{ url_for('login') }}";  // 팝업 확인 후 로그인 페이지로 이동
+            } else {
+                alert("{{ message|safe }}");
+            }
+            {% endfor %}
+        }
+    </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

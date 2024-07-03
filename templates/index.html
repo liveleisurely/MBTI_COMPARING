@@ -4,29 +4,36 @@
     <meta charset="UTF-8">
     <title>MBTI 투표 및 비교</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .disabled-label {
+            color: gray;
+        }
+        .bold {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>팀원들의 MBTI 투표 및 비교</h1>
+    <h1>팀원들의 MBTI 투표 및 비교 ver 1.1</h1>
     <div id="timer" class="timer-box">
         남은 투표 시간: <span id="time">12:00:00</span>
     </div>
     <div class="voter-name-container">
-        <label for="voterName">투표자 이름:</label>
-        <input type="text" id="voterName" name="voterName" required>
+        <label>투표자 이름: <span class="bold">{{ username }}</span></label>
     </div>
     <form id="voteForm" class="vote-form">
         <h2>투표하기</h2>
         <div class="form-container">
             <div class="name-column">
-                {% for name in ["박정호", "류범상", "김경민", "유동원", "이은경", "김가은", "한경훈", "배재형", "공준식"] %}
-                <label>
+                {% for name in ["박정호", "류범상", "김경민", "유동원", "이은경", "김가은", "한경훈", "배재형", "공준식", "김태영"] %}
+                <label id="label-{{ name }}">
                     <input type="radio" name="name" value="{{ name }}" required>
                     {{ name }}
                 </label><br>
                 {% endfor %}
             </div>
             <div class="mbti-column">
-                {% for mbti in ["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP"] %}
+                {% for mbti in ["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP","SEXY","CUTE"] %}
                 <label>
                     <input type="radio" name="mbti" value="{{ mbti }}" required>
                     {{ mbti }}
@@ -41,9 +48,86 @@
 
     <h2>투표 결과</h2>
     <div id="results">
-        <img id="resultsImage" src="" alt="결과 그래프">
+        <img id="resultsImage" src="{{ url_for('results') }}" alt="결과 그래프">
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        const userVotes = {{ user_votes | tojson | safe }};
+        const endTime = {{ end_time | tojson | safe }};
+        
+        window.onload = function() {
+            userVotes.forEach(name => {
+                const label = document.getElementById(`label-${name}`);
+                if (label) {
+                    const input = label.querySelector('input[type="radio"]');
+                    input.disabled = true;
+                    label.classList.add('disabled-label');
+                }
+            });
+
+            function startTimer(endTime, display) {
+                function updateTimer() {
+                    const now = new Date().getTime() / 1000;
+                    const timeLeft = endTime - now;
+
+                    const hours = Math.floor(timeLeft / 3600);
+                    const minutes = Math.floor((timeLeft % 3600) / 60);
+                    const seconds = Math.floor(timeLeft % 60);
+
+                    display.textContent = 
+                        (hours < 10 ? "0" : "") + hours + ":" + 
+                        (minutes < 10 ? "0" : "") + minutes + ":" + 
+                        (seconds < 10 ? "0" : "") + seconds;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        display.textContent = "00:00:00";
+                    }
+                }
+
+                updateTimer();
+                const timerInterval = setInterval(updateTimer, 1000);
+            }
+
+            const display = document.querySelector('#time');
+            startTimer(endTime, display);
+        };
+
+        document.getElementById('voteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.querySelector('input[name="name"]:checked').value;
+            const mbti = document.querySelector('input[name="mbti"]:checked').value;
+
+            fetch('/vote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, mbti })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            });
+        });
+
+        document.getElementById('compareButton').addEventListener('click', function() {
+            window.location.href = '{{ url_for("compare") }}';
+        });
+
+        window.addEventListener('beforeunload', function () {
+            navigator.sendBeacon('/logout');  // 브라우저 탭이 닫힐 때 로그아웃 요청을 보냅니다.
+        });
+
+        // AJAX를 통해 정기적으로 세션을 갱신
+        setInterval(() => {
+            fetch('/keep_alive', {
+                method: 'GET'
+            });
+        }, 600000);  // 10분마다 세션 갱신
+    </script>
 </body>
 </html>

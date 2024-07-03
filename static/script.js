@@ -25,15 +25,18 @@ const timerInterval = setInterval(updateTimer, 1000);
 document.getElementById('voteForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const voterName = document.getElementById('voterName').value;
-    if (!voterName) {
-        alert('투표자 이름을 입력하세요.');
+    const name = formData.get('name');
+    const mbti = formData.get('mbti');
+    
+    if (!name || !mbti) {
+        alert('모든 항목을 선택하세요.');
         return;
     }
+    
     const voteData = {
-        voterName: voterName,
-        name: formData.get('name'),
-        mbti: formData.get('mbti')
+        voterName: document.querySelector('.voter-name-container label').textContent.split(': ')[1],
+        name: name,
+        mbti: mbti
     };
 
     fetch('/vote', {
@@ -43,9 +46,12 @@ document.getElementById('voteForm').addEventListener('submit', function(event) {
         },
         body: JSON.stringify(voteData),
     }).then(response => response.json()).then(data => {
-        alert('투표가 완료되었습니다!');
-        document.getElementById('voteForm').reset();
-        document.getElementById('voterName').value = '';
+        if (data.status === 'success') {
+            alert('투표가 완료되었습니다!');
+            document.getElementById('voteForm').reset();
+        } else {
+            alert('이미 투표하셨습니다!');
+        }
         updateResults();
     });
 });
