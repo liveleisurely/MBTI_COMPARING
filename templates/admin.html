@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Admin Login</h1>
+    <form method="post">
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">로그인</button>
+    </form>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

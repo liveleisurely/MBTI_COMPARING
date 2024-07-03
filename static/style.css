@@ -1,0 +1,159 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.timer-box {
+    text-align: center;
+    font-size: 2em;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.voter-name-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.voter-name-container label {
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.voter-name-container input {
+    font-size: 1.2em;
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+.vote-form {
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 5px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.name-column, .mbti-column {
+    width: 45%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+#results {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#results img {
+    max-width: 100%;
+    height: auto;
+}
+
+.compare-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.compare-table th, .compare-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.compare-table th {
+    background-color: #f2f2f2;
+}
+
+.match {
+    background-color: #d4edda;
+    color: #155724;
+    font-weight: bold;
+}
+
+.mismatch {
+    background-color: #f8d7da;
+    color: #721c24;
+    font-weight: bold;
+}
+
+.pending {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.vote-details-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.vote-details-table th, .vote-details-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.vote-details-table th {
+    background-color: #f2f2f2;
+}
+
+.vote-details-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.vote-details-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.actual-mbti-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.actual-mbti-table th, .actual-mbti-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.actual-mbti-table th {
+    background-color: #f2f2f2;
+}
+
+.actual-mbti-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.actual-mbti-table tr:hover {
+    background-color: #f1f1f1;
+}

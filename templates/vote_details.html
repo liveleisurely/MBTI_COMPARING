@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>투표 상세 정보</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>투표 상세 정보</h1>
+    <table class="vote-details-table">
+        <thead>
+            <tr>
+                <th>투표자 이름</th>
+                <th>대상 이름</th>
+                <th>투표한 MBTI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vote in vote_details %}
+            <tr>
+                <td>{{ vote.voterName }}</td>
+                <td>{{ vote.name }}</td>
+                <td>{{ vote.mbti }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>현재 설정된 실제 MBTI</h2>
+    <table class="actual-mbti-table">
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>실제 MBTI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name, mbti in actual_mbti.items() %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ mbti }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>실제 MBTI 수정</h2>
+    <form method="post" action="{{ url_for('update_mbti') }}">
+        <label for="name">이름:</label>
+        <select id="name" name="name" required>
+            {% for name in actual_mbti.keys() %}
+            <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+        <label for="mbti">MBTI:</label>
+        <select id="mbti" name="mbti" required>
+            {% for mbti in ["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP", "CUTE", "SEXY"] %}
+            <option value="{{ mbti }}">{{ mbti }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">수정하기</button>
+    </form>
+</body>
+</html>

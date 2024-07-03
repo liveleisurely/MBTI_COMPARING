@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MBTI 투표 및 비교</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>팀원들의 MBTI 투표 및 비교</h1>
+    <div id="timer" class="timer-box">
+        남은 투표 시간: <span id="time">12:00:00</span>
+    </div>
+    <div class="voter-name-container">
+        <label for="voterName">투표자 이름:</label>
+        <input type="text" id="voterName" name="voterName" required>
+    </div>
+    <form id="voteForm" class="vote-form">
+        <h2>투표하기</h2>
+        <div class="form-container">
+            <div class="name-column">
+                {% for name in ["박정호", "류범상", "김경민", "유동원", "이은경", "김가은", "한경훈", "배재형", "공준식"] %}
+                <label>
+                    <input type="radio" name="name" value="{{ name }}" required>
+                    {{ name }}
+                </label><br>
+                {% endfor %}
+            </div>
+            <div class="mbti-column">
+                {% for mbti in ["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP"] %}
+                <label>
+                    <input type="radio" name="mbti" value="{{ mbti }}" required>
+                    {{ mbti }}
+                </label><br>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit">투표하기</button>
+    </form>
+
+    <button id="compareButton">투표 결과와 진짜 비교하기</button>
+
+    <h2>투표 결과</h2>
+    <div id="results">
+        <img id="resultsImage" src="" alt="결과 그래프">
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
