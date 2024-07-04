@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .note {
+            color: red;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>회원가입</h1>
     <form method="post" id="registerForm">
         <label for="username">이름:</label>
         <input type="text" id="username" name="username" required>
+        <span class="note">가능한 본인 이름으로 만들어주세요</span><br>
         <label for="password">비밀번호:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="password" id="password" name="password" required><br>
         <button type="submit">회원가입</button>
     </form>
     <p>이미 계정이 있으신가요? <a href="{{ url_for('login') }}">로그인</a></p>
@@ -24,20 +31,19 @@
             let username = '';
             let password = '';
             {% for category, message in messages %}
-            if ("{{ category }}" == "success") {
-                {% for message in messages %}
-                {% if loop.index == 2 %}
+            if ("{{ category }}" == "username") {
                 username = "{{ message }}";
-                {% elif loop.index == 3 %}
+            }
+            if ("{{ category }}" == "password") {
                 password = "{{ message }}";
-                {% endif %}
-                {% endfor %}
-                alert('=========================\n회원가입을 축하합니다\n1회용이지만 잘 기억하는 척이라도 하세요\n귀중한 정보는 어디있는지 모릅니다.\n\nid: "' + username + '"\npw: "' + password + '"\n=========================');
-                window.location.href = "{{ url_for('login') }}";  // 팝업 확인 후 로그인 페이지로 이동
-            } else {
-                alert("{{ message|safe }}");
             }
             {% endfor %}
+            if (username && password) {
+                alert('=========================\n회원가입을 축하합니다. 로그인 해주세요. \n1회용이지만 잘 기억하는 척이라도 하세요\n귀중한 정보는 어디있는지 모릅니다.\n\n' + username + '\n' + password + '\n=========================');
+                window.location.href = "{{ url_for('login') }}";  // 팝업 확인 후 로그인 페이지로 이동
+            } else {
+                alert("{{ messages[0][1] }}");
+            }
         }
     </script>
     {% endif %}

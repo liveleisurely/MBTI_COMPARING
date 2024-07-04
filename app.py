@@ -54,7 +54,7 @@ def register():
         password = request.form['password']
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash('이미 사용 중인 아이디입니다.', 'error')
+            flash('이미 가입된 아이디입니다.', 'error')
             return redirect(url_for('register'))
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         
@@ -62,9 +62,8 @@ def register():
         try:
             db.session.add(new_user)
             db.session.commit()
-            flash('회원가입을 축하합니다', 'success')
-            flash(username, 'username')
-            flash(password, 'password')
+            flash(f'username:{username}', 'username')
+            flash(f'password:{password}', 'password')
             return redirect(url_for('register'))
         except Exception as e:
             db.session.rollback()
@@ -79,13 +78,15 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         
-        if user and check_password_hash(user.password, password):
+        if not user:
+            flash('없는 아이디입니다. 회원가입을 해주세요', 'error')
+        elif not check_password_hash(user.password, password):
+            flash('비밀번호가 틀렸습니다. 재입력해주세요. 기억이 안나시면 관리자에게 문의해주세요', 'error')
+        else:
             session['username'] = username
             session['has_voted'] = user.has_voted
             session.permanent = True  # 세션을 영구적으로 설정하여 세션 만료 시간을 적용합니다.
             return redirect(url_for('index'))
-        else:
-            flash('로그인 정보가 일치하지 않습니다.', 'error')
     
     return render_template('login.html')
 
