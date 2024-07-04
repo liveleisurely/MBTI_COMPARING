@@ -208,18 +208,22 @@ def compare():
     show_results = False
     for name, mbti_votes in votes.items():
         total_votes = sum(mbti_votes.values())
-        if total_votes >= 5:
+        if total_votes >= 4:
             show_results = True
-            most_voted_mbti = max(mbti_votes, key=mbti_votes.get)
+            max_votes = max(mbti_votes.values())
+            max_voted_mbti_list = [mbti for mbti, count in mbti_votes.items() if count == max_votes]
             actual = actual_mbti[name]
-            if most_voted_mbti == actual:
-                results[name] = "MATCH"
+            
+            if len(max_voted_mbti_list) == 1 and max_voted_mbti_list[0] == actual:
+                results[name] = {'most_voted': ', '.join(max_voted_mbti_list), 'actual': actual, 'class': 'match'}
             else:
-                results[name] = f"Voted: {most_voted_mbti}, Actual: {actual}"
+                results[name] = {'most_voted': ', '.join(max_voted_mbti_list), 'actual': actual, 'class': 'mismatch'}
         else:
-            results[name] = f"투표수가 부족합니다 ({total_votes}/5)"
+            results[name] = {'most_voted': f"투표수가 부족합니다 ({total_votes}/4)", 'actual': actual_mbti[name], 'class': 'pending'}
 
     return render_template('compare.html', results=results, show_results=show_results)
+
+
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():

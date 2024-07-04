@@ -18,7 +18,7 @@
         <tbody>
             {% for vote in vote_details %}
             <tr>
-                <td>{{ vote.voterName }}</td>
+                <td>{{ vote.voter_name }}</td>
                 <td>{{ vote.name }}</td>
                 <td>{{ vote.mbti }}</td>
             </tr>
@@ -60,19 +60,9 @@
         </select>
         <button type="submit">수정하기</button>
     </form>
-
-    <h2>투표 데이터 초기화</h2>
-    <button onclick="clearVotes()">초기화</button>
-    <form method="post" action="{{ url_for('clear_votes') }}" id="clearVotesForm" style="display: none;">
-        <input type="hidden" name="clear" value="true">
+    
+    <form method="post" action="{{ url_for('clear_votes') }}">
+        <button type="submit">투표 데이터 초기화</button>
     </form>
-
-    <script>
-        function clearVotes() {
-            if (confirm('정말로 모든 투표 데이터를 초기화하시겠습니까?')) {
-                document.getElementById('clearVotesForm').submit();
-            }
-        }
-    </script>
 </body>
 </html>

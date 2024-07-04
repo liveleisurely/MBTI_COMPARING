@@ -2,33 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>MBTI 비교 결과</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .match {
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: bold;
+        }
+        .mismatch {
+            background-color: #f8d7da;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .pending {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <title>MBTI 투표 결과 비교 </title>
-    <h1>MBTI 투표 결과 비교 (최소 5명 필요)</h1>
+    <h1>MBTI 비교 결과</h1>
     <table class="compare-table">
         <thead>
             <tr>
                 <th>이름</th>
-                <th>결과</th>
+                <th>Most Voted</th>
+                <th>Actual</th>
             </tr>
         </thead>
         <tbody>
             {% for name, result in results.items() %}
-            <tr>
+            <tr class="{{ result.class }}">
                 <td>{{ name }}</td>
-                <td class="{{ 'match' if 'MATCH' in result else 'mismatch' if 'Voted' in result else 'pending' }}">
-                    {% if result.startswith('투표수가 부족합니다') %}
-                        {{ result }}
-                    {% else %}
-                        {% if show_results %}
-                            {{ result }}
-                        {% else %}
-                            투표수가 부족합니다
-                        {% endif %}
-                    {% endif %}
-                </td>
+                <td>{{ result.most_voted }}</td>
+                <td>{{ result.actual }}</td>
             </tr>
             {% endfor %}
         </tbody>

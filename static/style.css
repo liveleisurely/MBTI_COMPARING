@@ -108,10 +108,11 @@ button {
 }
 
 .pending {
-    background-color: #f8f9fa;
-    color: #6c757d;
+    background-color: #fff3cd;
+    color: #856404;
     font-weight: bold;
 }
+
 
 .vote-details-table {
     width: 80%;
