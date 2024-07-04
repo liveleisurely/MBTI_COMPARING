@@ -4,36 +4,56 @@
     <meta charset="UTF-8">
     <title>MBTI 투표 및 비교</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .disabled-label {
-            color: gray;
+        body {
+            font-family: 'Montserrat', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
+            padding: 20px;
+        }
+        .note {
+            color: red;
+            font-size: 0.9em;
+            margin-left: 10px;
         }
         .bold {
             font-weight: bold;
         }
+        .disabled-label {
+            color: gray;
+        }
+        .voter-name-container {
+            margin-bottom: 20px;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .name-column, .mbti-column {
+            width: 45%;
+        }
     </style>
 </head>
 <body>
-    <h1>팀원들의 MBTI 투표 및 비교 ver 1.1</h1>
+    <h1>팀원들의 MBTI 투표 및 비교</h1>
     <div id="timer" class="timer-box">
         남은 투표 시간: <span id="time">12:00:00</span>
     </div>
     <div class="voter-name-container">
-        <label>투표자 이름: <span class="bold">{{ username }}</span></label>
+        <label>투표자 이름: <input type="text" id="username"><span class="note"> 가능한 실명에 가깝게 부탁드려요~</span></label>
     </div>
     <form id="voteForm" class="vote-form">
         <h2>투표하기</h2>
         <div class="form-container">
             <div class="name-column">
-                {% for name in ["박정호", "류범상", "김경민", "유동원", "이은경", "김가은", "한경훈", "배재형", "공준식", "김태영"] %}
+                {% for name in names %}
                 <label id="label-{{ name }}">
-                    <input type="radio" name="name" value="{{ name }}" required>
+                    <input type="radio" name="name" value="{{ name }}">
                     {{ name }}
                 </label><br>
                 {% endfor %}
             </div>
             <div class="mbti-column">
-                {% for mbti in ["INTJ", "INTP", "ENTJ", "ENTP", "INFJ", "INFP", "ENFJ", "ENFP", "ISTJ", "ISFJ", "ESTJ", "ESFJ", "ISTP", "ISFP", "ESTP", "ESFP","SEXY","CUTE"] %}
+                {% for mbti in mbtis %}
                 <label>
                     <input type="radio" name="mbti" value="{{ mbti }}" required>
                     {{ mbti }}
@@ -44,7 +64,7 @@
         <button type="submit">투표하기</button>
     </form>
 
-    <button id="compareButton">투표 결과와 진짜 비교하기</button>
+    <button id="compareButton">투표 MBTI와 진짜 MBTI 비교하기</button>
 
     <h2>투표 결과</h2>
     <div id="results">
@@ -56,15 +76,38 @@
         const endTime = {{ end_time | tojson | safe }};
         
         window.onload = function() {
+            // Disable already voted radio buttons
             userVotes.forEach(name => {
                 const label = document.getElementById(`label-${name}`);
                 if (label) {
                     const input = label.querySelector('input[type="radio"]');
                     input.disabled = true;
                     label.classList.add('disabled-label');
+
+                    label.addEventListener('click', function() {
+                        const confirmReVote = confirm('재투표하시겠습니까?');
+                        if (confirmReVote) {
+                            fetch('/delete_vote', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ voterName: document.getElementById('username').value, name: name })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    input.disabled = false;
+                                    label.classList.remove('disabled-label');
+                                }
+                                alert(data.message);
+                            });
+                        }
+                    });
                 }
             });
 
+            // Start timer
             function startTimer(endTime, display) {
                 function updateTimer() {
                     const now = new Date().getTime() / 1000;
@@ -95,6 +138,7 @@
 
         document.getElementById('voteForm').addEventListener('submit', function(event) {
             event.preventDefault();
+            const voterName = document.getElementById('username').value;
             const name = document.querySelector('input[name="name"]:checked').value;
             const mbti = document.querySelector('input[name="mbti"]:checked').value;
 
@@ -103,7 +147,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, mbti })
+                body: JSON.stringify({ voterName, name, mbti })
             })
             .then(response => response.json())
             .then(data => {
@@ -117,17 +161,6 @@
         document.getElementById('compareButton').addEventListener('click', function() {
             window.location.href = '{{ url_for("compare") }}';
         });
-
-        window.addEventListener('beforeunload', function () {
-            navigator.sendBeacon('/logout');  // 브라우저 탭이 닫힐 때 로그아웃 요청을 보냅니다.
-        });
-
-        // AJAX를 통해 정기적으로 세션을 갱신
-        setInterval(() => {
-            fetch('/keep_alive', {
-                method: 'GET'
-            });
-        }, 600000);  // 10분마다 세션 갱신
     </script>
 </body>
 </html>

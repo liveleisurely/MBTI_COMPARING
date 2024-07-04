@@ -1,6 +1,6 @@
 /* static/style.css */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
     padding: 20px;
 }
 
@@ -161,3 +161,5 @@ button {
 .actual-mbti-table tr:hover {
     background-color: #f1f1f1;
 }
+
+
