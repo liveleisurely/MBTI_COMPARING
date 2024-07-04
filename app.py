@@ -44,26 +44,26 @@ start_time = datetime.now()
 end_time = start_time + timedelta(hours=12)
 
 color_map = {
-    "INTJ": "#FF5733",
-    "INTP": "#33FF57",
-    "ENTJ": "#3375FF",
-    "ENTP": "#FF33A6",
-    "INFJ": "#75FF33",
-    "INFP": "#FF3333",
-    "ENFJ": "#FFA633",
-    "ENFP": "#FF3333",
-    "ISTJ": "#A6FF33",
-    "ISFJ": "#33FF75",
-    "ESTJ": "#3375FF",
-    "ESFJ": "#A633FF",
-    "ISTP": "#FF33A6",
-    "ISFP": "#FF5733",
-    "ESTP": "#33FFF7",
-    "ESFP": "#A6FF33",
-    "CUTE": "#FF33A6",
-    "SEXY": "#FF5733",
-    "IIII": "#FF3333",
-    "EEEE": "#33FF75"
+    "INTJ": "#FFB3BA",  # Light Red
+    "INTP": "#FFDFBA",  # Light Orange
+    "ENTJ": "#FFFFBA",  # Light Yellow
+    "ENTP": "#BAFFC9",  # Light Green
+    "INFJ": "#BAE1FF",  # Light Blue
+    "INFP": "#E6B3FF",  # Light Purple
+    "ENFJ": "#FFC0CB",  # Pink
+    "ENFP": "#FFD700",  # Gold
+    "ISTJ": "#B4A7D6",  # Lavender
+    "ISFJ": "#D5A6BD",  # Pale Pink
+    "ESTJ": "#A2C4C9",  # Pale Blue
+    "ESFJ": "#F9CB9C",  # Light Apricot
+    "ISTP": "#C9DAF8",  # Pale Cyan
+    "ISFP": "#D9D2E9",  # Pale Lavender
+    "ESTP": "#CFE2F3",  # Pale Light Blue
+    "ESFP": "#FCE5CD",  # Light Peach
+    "CUTE": "#FFFAC8",  # Light Yellowish
+    "SEXY": "#FFB3BA",  # Light Red
+    "IIII": "#D5A6BD",  # Pale Pink
+    "EEEE": "#FFD700"   # Gold
 }
 
 @app.route('/')
@@ -102,7 +102,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == ['POST']:
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
@@ -182,11 +182,11 @@ def results():
 
         if sum(sizes) == 0:
             ax.text(0.5, 0.5, '아직 투표수가 부족합니다', horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
-            ax.set_title(name, fontsize=12)
+            ax.text(0.5, -0.1, name, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontsize=12)  # 아래쪽에 제목 추가
             ax.axis('off')
         else:
             ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%')
-            ax.set_title(name, fontsize=12)
+            ax.text(0.5, -0.1, name, horizontalalignment='center', verticalalignment='top', transform=ax.transAxes, fontsize=12)  # 아래쪽에 제목 추가
 
     for ax in axes[len(votes):]:
         ax.axis('off')
