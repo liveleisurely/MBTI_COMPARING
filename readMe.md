@@ -1,5 +1,10 @@
 # 팀원간 MBTI 비교를 위한 내부 Flask Site Code
 
+ver 1.2
+- 폰트 수정
+- 그림 추가
+- 회원가입 페이지 없이 바로 진입
+
 ver 1.3
 - SEXY, CUTE, IIII, EEEE 밈 추가
 - 해당 팝업 추가
