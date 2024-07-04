@@ -31,15 +31,31 @@
         .name-column, .mbti-column {
             width: 45%;
         }
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-title img {
+            width: 150px; /* Adjust size as needed */
+            height: auto;
+        }
+        .header-title h1 {
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>팀원들의 MBTI 투표 및 비교</h1>
+    <div class="header-title">
+        <img src="{{ url_for('static', filename='enfp.png') }}" alt="INTJ Image">
+        <h1>팀원들의 MBTI 투표 및 비교 ver 1.2</h1>
+        <img src="{{ url_for('static', filename='02.perfect_intj.png') }}" alt="ENFP Image">
+    </div>
     <div id="timer" class="timer-box">
         남은 투표 시간: <span id="time">12:00:00</span>
     </div>
     <div class="voter-name-container">
-        <label>투표자 이름: <input type="text" id="username"><span class="note"> 가능한 실명에 가깝게 부탁드려요~</span></label>
+        <label>투표자 이름: <input type="text" id="username" required><span class="note"> 가능한 실명에 가깝게 부탁드려요~</span></label>
     </div>
     <form id="voteForm" class="vote-form">
         <h2>투표하기</h2>
