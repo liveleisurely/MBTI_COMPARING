@@ -1,5 +1,6 @@
 # 폴더 무시
 instance/
+__pycache__/
 
 # 확장자 무시
 *.zip
