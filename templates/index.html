@@ -90,8 +90,14 @@
     <script>
         const userVotes = {{ user_votes | tojson | safe }};
         const endTime = {{ end_time | tojson | safe }};
-        
+
         window.onload = function() {
+            // 로컬 스토리지에서 투표자 이름을 불러옴
+            const storedVoterName = localStorage.getItem('voterName');
+            if (storedVoterName) {
+                document.getElementById('username').value = storedVoterName;
+            }
+
             // Disable already voted radio buttons
             userVotes.forEach(name => {
                 const label = document.getElementById(`label-${name}`);
@@ -157,6 +163,9 @@
             const voterName = document.getElementById('username').value;
             const name = document.querySelector('input[name="name"]:checked').value;
             const mbti = document.querySelector('input[name="mbti"]:checked').value;
+
+            // 투표자 이름을 로컬 스토리지에 저장
+            localStorage.setItem('voterName', voterName);
 
             fetch('/vote', {
                 method: 'POST',
